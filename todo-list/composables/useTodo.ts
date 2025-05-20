@@ -1,13 +1,13 @@
 import { v4 as uuid } from 'uuid'
 import { useState } from '#app'
 
-interface TodoListItem {
+export interface TodoListItem {
     id: string
     title: string
     done: boolean
 }
 
-interface TodoList {
+export interface TodoList {
     id: string
     title: string
     item: TodoListItem[]
