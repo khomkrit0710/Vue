@@ -10,7 +10,7 @@ export interface TodoListItem {
 export interface TodoList {
     id: string
     title: string
-    item: TodoListItem[]
+    items: TodoListItem[]
 }
 
 export function useTodo() {
@@ -20,7 +20,7 @@ export function useTodo() {
         todos.value.push({
             id: uuid(),
             title,
-            item:[]
+            items:[]
         })
     }
 
@@ -35,11 +35,56 @@ export function useTodo() {
         todos.value = todos.value.filter((todo) => todo.id !== id)
     }
     
+    function getTodo(id: string){
+        const todo = todos.value.find((todo) => todo.id === id)
+        if (!todo) {
+            throw new Error('Todo not found')
+        }
+
+        const addItem = (title: string) => {
+            todo.items.push({
+                id: uuid(),
+                title,
+                done: false
+            })
+        }
+        const updateItemTitle = (id: string, newTitle: string) => {
+            const item = todo.items.find((item) => item.id === id)
+            if (item) {
+                item.title = newTitle
+            }
+        }
+        const markItemDone = (id: string) => {
+            const item = todo.items.find((item) => item.id === id)
+            if (item) {
+                item.done = true
+            }
+        }
+        const markUndone = (id: string) => {
+            const item = todo.items.find((item) => item.id === id)
+            if (item) {
+                item.done = false
+            }
+        }
+        const removeItem = (id: string) => {
+            todo.items = todo.items.filter((item) => item.id !== id)
+        }
+        return {
+            todo,
+            addItem,
+            updateItemTitle,
+            markItemDone,
+            markUndone,
+            removeItem
+        }
+    }
+
     return {
         todos,
         addTodo,
         updateTodoTitle,
-        removeTodo
+        removeTodo,
+        getTodo
     }
     
 }
